@@ -1,0 +1,58 @@
+import { type Config } from "tailwindcss";
+import { fontFamily } from "tailwindcss/defaultTheme";
+
+export default {
+  content: ["./src/**/*.tsx"],
+  daisyui: {
+    themes: [
+      {
+        negro: {
+          "primary": "#e11d48",
+          "secondary": "#57534e",
+          "accent": "#00ffff",
+          "neutral": "#e5e7eb",
+          "base-100": "#292524",
+          "info": "#3b82f6",
+          "success": "#a3e635",
+          "warning": "#facc15",
+          "error": "#ff0000",
+        },
+      },
+      "light",
+      "dark",
+      "cupcake",
+      "bumblebee",
+      "emerald",
+      "corporate",
+      "synthwave",
+      "retro",
+      "cyberpunk",
+      "valentine",
+      "halloween",
+      "garden",
+      "forest",
+      "aqua",
+      "lofi",
+      "pastel",
+      "fantasy",
+      "wireframe",
+      "black",
+      "luxury",
+      "dracula",
+      "cmyk",
+      "autumn",
+      "business",
+      "acid",
+      "lemonade",
+      "night",
+      "coffee",
+      "winter",
+      "dim",
+      "nord",
+      "sunset",
+    ],
+  },
+  plugins: [
+    require('daisyui'),
+  ],
+} satisfies Config;
