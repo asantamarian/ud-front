@@ -4,7 +4,7 @@ export default function Sidebar(){
     return (
         <div className="card h-screen w-64 bg-base-100 shadow-xl flex flex-col p-4">
             <div className="text-center text-xl font-bold mb-6">
-                My Sidebar
+                ƒ
             </div>
             <ul className="menu">
                 <li>
