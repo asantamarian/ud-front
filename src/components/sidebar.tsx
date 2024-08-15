@@ -2,9 +2,9 @@ import Link from "next/link";
 
 export default function Sidebar(){
     return (
-        <div className="card h-screen w-64 bg-base-100 shadow-xl flex flex-col p-4">
+        <div className=" h-screen w-64 bg-base-100 shadow-xl flex flex-col p-4">
             <div className="text-center text-xl font-bold mb-6">
-                ƒ
+                F
             </div>
             <ul className="menu">
                 <li>
