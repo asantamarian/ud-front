@@ -1,10 +1,11 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Sidebar(){
     return (
         <div className=" h-screen w-64 bg-base-100 shadow-xl flex flex-col p-4">
-            <div className="text-center text-xl font-bold mb-6">
-                F
+            <div className="flex  mb-6 place-content-center">
+                <Image src="/brand/logo.png" width="80" height="80" alt="Unión dagones" />
             </div>
             <ul className="menu">
                 <li>

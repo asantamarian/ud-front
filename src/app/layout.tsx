@@ -17,12 +17,12 @@ export default function RootLayout({
     return (
         <html lang="en" data-theme="negro" className={`${GeistSans.variable}`}>
 
-        <body>
-        <div className="flex h-screen bg-black">
-            <div className="overflow-y-auto w-lvw">
+        <body className="bg-black">
+
+
                 {children}
-            </div>
-        </div>
+
+
         </body>
         </html>
     );

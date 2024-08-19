@@ -20,7 +20,7 @@ export default function RootLayout({
 
     <div className="flex h-screen">
       <Sidebar />
-      <div className="overflow-y-auto w-lvw">
+      <div className="overflow-y-auto overscroll-none w-lvw mx-0">
         {children}
       </div>
     </div>
