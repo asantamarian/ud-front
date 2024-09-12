@@ -1,53 +1,50 @@
-import Link from "next/link";
-import Image from "next/image";
+'use client'
 
-export default function Sidebar(){
+import { useState } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { usePathname } from 'next/navigation'
+import { Menu, LayoutDashboard, Users, BookOpen, LogOut } from 'lucide-react'
+
+const sidebarItems = [
+    { href: "/locker-room", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/locker-room/teams", label: "Teams", icon: Users },
+    { href: "/locker-room/playbook", label: "Playbook", icon: BookOpen },
+    { href: "/logout", label: "Logout", icon: LogOut },
+]
+
+export default function Sidebar() {
+    const [sidebarOpen, setSidebarOpen] = useState(false)
+    const pathname = usePathname()
+
+    const toggleSidebar = () => setSidebarOpen(!sidebarOpen)
+
     return (
-        <div className=" h-screen w-64 bg-base-100 shadow-xl flex flex-col p-4">
-            <div className="flex  mb-6 place-content-center">
-                <Image src="/brand/logo.png" width="80" height="80" alt="Unión dagones" />
-            </div>
-            <ul className="menu">
-                <li>
-                    <Link href="/admin" className="active:bg-gray-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
-                             stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M4 6h16M4 12h8m-8 6h16"/>
-                        </svg>
-                        Dashboard
+        <div className="drawer-side">
+            <label htmlFor="sidebar-drawer" className="drawer-overlay"></label>
+            <ul className="menu p-4 w-80 h-full bg-base-200 text-base-content">
+                <li className="mb-4">
+                    <Link href="/locker-room" className="flex items-center px-2 py-3">
+                        <Image
+                            src="/brand/logo.png"
+                            alt="Company Logo"
+                            width={150}
+                            height={50}
+                            className="max-w-full h-auto"
+                        />
                     </Link>
                 </li>
-                <li>
-                    <Link href="/admin/teams" className="hover:bg-gray-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
-                             stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M4 6h16M4 12h8m-8 6h16"/>
-                        </svg>
-                        Teams
-                    </Link>
-                </li>
-                <li>
-                    <Link href="#" className="hover:bg-gray-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
-                             stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M4 6h16M4 12h8m-8 6h16"/>
-                        </svg>
-                        Settings
-                    </Link>
-                </li>
-                <li>
-                    <Link href="#" className="hover:bg-gray-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
-                             stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M4 6h16M4 12h8m-8 6h16"/>
-                        </svg>
-                        Logout
-                    </Link>
-                </li>
+                {sidebarItems.map((item) => (
+                    <li key={item.href}>
+                        <Link
+                            href={item.href}
+                            className={pathname === item.href ? 'active' : ''}
+                        >
+                            {item.icon && <item.icon className="w-6 h-6" />}
+                            {item.label}
+                        </Link>
+                    </li>
+                ))}
             </ul>
         </div>
     )

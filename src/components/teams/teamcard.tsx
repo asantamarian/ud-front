@@ -48,7 +48,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
                 <ul className="overflow-y-auto h-80">
                     {players.map((player, index) => (
                         <li key={index} className="flex items-center mb-2">
-                            <Link href={`/admin/players/${player.number}`} className="flex items-center">
+                            <Link href={`/locker-room/players/${player.number}`} className="flex items-center">
                                 <div className="avatar">
                                     <div className="w-10 rounded-full">
                                         <Image

@@ -102,7 +102,7 @@ export default async function PlayerProfile({ params }: { params: { id: string }
     }
 
     return (
-        <div className="container mx-0">
+        <div className="mx-0">
             {/* Cover Image */}
             <div className="relative mx-0">
                 <Image
