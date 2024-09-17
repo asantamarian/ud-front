@@ -22,13 +22,12 @@ export default function Page() {
     };
 
     const handleGoogleLogin = async () => {
-
         try {
-            await pb.collection('users').authWithOAuth2({
-                provider: 'google', // Callback route
-            });
-        } catch (err) {
-            console.error(err);
+            const redirectUrl = `${window.location.origin}/auth/google-callback`;
+            const authUrl = `${process.env.NEXT_PUBLIC_POCKETBASE_URL}/api/oauth2/auth/google?redirectUrl=${redirectUrl}`;
+            window.location.href = authUrl;
+        } catch (error) {
+            console.error('Google login failed:', error);
         }
     };
 

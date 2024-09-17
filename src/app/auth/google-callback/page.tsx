@@ -5,13 +5,13 @@ import pb from '../../../../lib/pocketbase';
 
 export default function GoogleCallback() {
     const router = useRouter();
-
+console.log("asdasdasd")
     useEffect(() => {
         const completeOAuth = async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code'); // OAuth code
             const state = urlParams.get('state'); // Optional state, if applicable
-
+            console.log("adasdasd")
             if (!code) {
                 console.error('OAuth code not found in the URL.');
                 return router.push('/login');
@@ -27,6 +27,7 @@ export default function GoogleCallback() {
                 );
 
                 // Redirect to the protected page after successful login
+                alert('Login successful!');
                 router.push('/locker-room');
             } catch (error) {
                 console.error('OAuth login failed:', error);
