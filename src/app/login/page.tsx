@@ -4,6 +4,9 @@ import { useState } from 'react';
 import pb from '../../../lib/pocketbase';
 import Image from 'next/image'
 import {useRouter} from "next/navigation";
+import PocketBase from 'pocketbase';
+
+
 export default function Page() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -24,8 +27,13 @@ export default function Page() {
     const handleGoogleLogin = async () => {
         try {
             const redirectUrl = `${window.location.origin}/auth/google-callback`;
-            const authUrl = `${process.env.NEXT_PUBLIC_POCKETBASE_URL}/api/oauth2/auth/google?redirectUrl=${redirectUrl}`;
-            window.location.href = authUrl;
+            const pb = new PocketBase('https://api.uniondragones.cl');
+            await pb.collection('users').authWithOAuth2({ provider: 'google',redirectUrl: redirectUrl});
+
+            // After successful authentication with PocketBase
+            document.cookie = `auth-token=${pb.authStore.token}; path=/;`;
+
+            window.location.href = '/locker-room';
         } catch (error) {
             console.error('Google login failed:', error);
         }

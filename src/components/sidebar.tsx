@@ -9,8 +9,7 @@ import { Menu, LayoutDashboard, Users, BookOpen, LogOut } from 'lucide-react'
 const sidebarItems = [
     { href: "/locker-room", label: "Dashboard", icon: LayoutDashboard },
     { href: "/locker-room/teams", label: "Teams", icon: Users },
-    { href: "/locker-room/playbook", label: "Playbook", icon: BookOpen },
-    { href: "/logout", label: "Logout", icon: LogOut },
+    { href: "/locker-room/playbook", label: "Playbook", icon: BookOpen }
 ]
 
 export default function Sidebar() {
@@ -40,11 +39,20 @@ export default function Sidebar() {
                             href={item.href}
                             className={pathname === item.href ? 'active' : ''}
                         >
-                            {item.icon && <item.icon className="w-6 h-6" />}
+                            {item.icon && <item.icon className="w-6 h-6"/>}
                             {item.label}
                         </Link>
                     </li>
                 ))}
+                <li key='/logout'>
+                    <Link
+                        href="/logout"
+                        className={pathname === '/logout' ? 'active' : ''}
+                    >
+                        {LogOut && <LogOut className="w-6 h-6"/>}
+                        {'Logout'}
+                    </Link>
+                </li>
             </ul>
         </div>
     )
