@@ -1,10 +1,9 @@
 // app/login/page.tsx
 'use client';
 import { useState } from 'react';
-import pb from '../../../lib/pocketbase';
 import Image from 'next/image'
 import {useRouter} from "next/navigation";
-import PocketBase from 'pocketbase';
+import pb from '~/lib/pocketbase';
 
 
 export default function Page() {
@@ -27,7 +26,6 @@ export default function Page() {
     const handleGoogleLogin = async () => {
         try {
             const redirectUrl = `${window.location.origin}/auth/google-callback`;
-            const pb = new PocketBase('https://api.uniondragones.cl');
             await pb.collection('users').authWithOAuth2({ provider: 'google',redirectUrl: redirectUrl});
 
             // After successful authentication with PocketBase

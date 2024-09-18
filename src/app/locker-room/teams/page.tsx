@@ -1,59 +1,70 @@
+'use client';
+import { useEffect, useState } from 'react';
 import TeamCard from "~/components/teams/teamcard";
-
-type Player = {
-    number: number;
-    firstName: string;
-    lastName: string;
-    image: string;
-    status: 'Active' | 'Injured'; // Restricting status to these two values
-    stats: {
-        points: number;
-        assists: number;
-        rebounds: number;
-    };
-};
-
-const generateRandomPlayer = (team: string, i: number): Player => ({
-    number: i + 1,
-    firstName: `FirstName${i + 1}`,
-    lastName: `LastName${i + 1}`,
-    image: `https://picsum.photos/seed/${team}${i + 1}/50/50`,
-    status: i % 5 === 0 ? 'Injured' : 'Active', // Status is now type-safe
-    stats: {
-        points: Math.floor(Math.random() * 30),
-        assists: Math.floor(Math.random() * 10),
-        rebounds: Math.floor(Math.random() * 15),
-    },
-});
-
-const teams = [
-    {
-        name: 'Femenino',
-        injured: 2,
-        active: 13,
-        players: Array.from({ length: 15 }, (_, i) =>
-            generateRandomPlayer('femenino', i)
-        ),
-    },
-    {
-        name: 'Rojo',
-        injured: 1,
-        active: 14,
-        players: Array.from({ length: 15 }, (_, i) =>
-            generateRandomPlayer('rojo', i)
-        ),
-    },
-    {
-        name: 'Negro',
-        injured: 3,
-        active: 12,
-        players: Array.from({ length: 15 }, (_, i) =>
-            generateRandomPlayer('negro', i)
-        ),
-    },
-];
+import pb from "~/lib/pocketbase";
 
 const TeamsPage: React.FC = () => {
+    const [teams, setTeams] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    interface Player {
+        number: number;
+        firstName: string;
+        lastName: string;
+        image: string;
+        status: 'Active' | 'Injured';
+        stats: {
+            points: number;
+            assists: number;
+            rebounds: number;
+        };
+    }
+
+    interface TeamCardProps {
+        teamName: string;
+        teamLogo: string;
+        activePlayers: number;
+        injuredPlayers: number;
+        players: Player[];
+    }
+
+    useEffect(() => {
+        const fetchTeams = async () => {
+            try {
+                // Fetch teams from PocketBase and expand players
+                const response = await pb.collection('teams').getFullList({ expand: 'players' ,requestKey: null});
+console.log(response);
+                // Map the response to extract team and player informa
+                const mappedTeams = response.map((team: any) => {
+                    return {
+                        name: team.name,
+                        logo: `${pb.baseUrl}/api/files/${team.collectionId}/${team.id}/${team.logo}`, // Construct team logo URL
+                        injured: team.expand.players.filter((player: any) => player.injured).length,
+                        active: team.expand.players.filter((player: any) => !player.injured).length,
+                        players: team.expand.players.map((player: any) => ({
+                            number: player.number,
+                            firstName: player.name,
+                            lastName: player.lastName,
+                            image: `${pb.baseUrl}/api/files/${player.collectionId}/${player.id}/${player.profile_pic}`, // Construct player image URL
+                            status: player.injured ? 'Injured' : 'Active'
+                        })),
+                    };
+                });
+
+                setTeams(mappedTeams); // Set the teams data to state
+            } catch (error) {
+                console.error('Error fetching teams:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+      void fetchTeams(); // Call the function inside useEffect
+    }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div>
             <h1 className="text-3xl font-bold mb-6">Equipos</h1>
@@ -62,6 +73,7 @@ const TeamsPage: React.FC = () => {
                     <TeamCard
                         key={team.name}
                         teamName={team.name}
+                        teamLogo={team.logo}
                         activePlayers={team.active}
                         injuredPlayers={team.injured}
                         players={team.players}

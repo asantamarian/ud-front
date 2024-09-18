@@ -7,15 +7,14 @@ interface Player {
     lastName: string;
     image: string;
     status: 'Active' | 'Injured';
-    stats: {
-        points: number;
-        assists: number;
-        rebounds: number;
-    };
+    tot_points: number;
+    tot_assists: number;
+    tot_rebounds: number;
 }
 
 interface TeamCardProps {
     teamName: string;
+    teamLogo: string;  // Include the team logo in props
     activePlayers: number;
     injuredPlayers: number;
     players: Player[];
@@ -23,6 +22,7 @@ interface TeamCardProps {
 
 const TeamCard: React.FC<TeamCardProps> = ({
                                                teamName,
+                                               teamLogo,
                                                activePlayers,
                                                injuredPlayers,
                                                players,
@@ -45,6 +45,14 @@ const TeamCard: React.FC<TeamCardProps> = ({
                         </div>
                     </div>
                 </div>
+                <div className="mb-4">
+                    <Image
+                        src={teamLogo}  // Display the team logo
+                        alt={`${teamName} logo`}
+                        width={150}
+                        height={150}
+                    />
+                </div>
                 <ul className="overflow-y-auto h-80">
                     {players.map((player, index) => (
                         <li key={index} className="flex items-center mb-2">
@@ -61,9 +69,9 @@ const TeamCard: React.FC<TeamCardProps> = ({
                                     </div>
                                 </div>
                                 <div className="ml-3">
-                  <span className="text-sm font-semibold">
-                    {player.number}. {player.firstName} {player.lastName}
-                  </span>
+                                    <span className="text-sm font-semibold">
+                                        {player.number}. {player.firstName} {player.lastName}
+                                    </span>
                                     <span
                                         className={`ml-2 badge ${
                                             player.status === 'Active'
@@ -71,12 +79,12 @@ const TeamCard: React.FC<TeamCardProps> = ({
                                                 : 'badge-error'
                                         }`}
                                     >
-                    {player.status}
-                  </span>
+                                        {player.status}
+                                    </span>
                                     <div className="text-xs mt-1">
-                                        <p>Points: {player.stats.points}</p>
-                                        <p>Assists: {player.stats.assists}</p>
-                                        <p>Rebounds: {player.stats.rebounds}</p>
+                                        <p>Points: {player.tot_points}</p>
+                                        <p>Assists: {player.tot_assists}</p>
+                                        <p>Rebounds: {player.tot_rebounds}</p>
                                     </div>
                                 </div>
                             </Link>
