@@ -1,22 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { Menu, LayoutDashboard, Users, BookOpen, LogOut } from 'lucide-react'
+import {  LayoutDashboard, Users, BookOpen, LogOut } from 'lucide-react'
 
 const sidebarItems = [
     { href: "/locker-room", label: "Home", icon: LayoutDashboard },
-    { href: "/locker-room/teams", label: "Teams", icon: Users },
+    { href: "/locker-room/teams", label: "Equipos", icon: Users },
     { href: "/locker-room/playbook", label: "Playbook", icon: BookOpen }
 ]
 
 export default function Sidebar() {
-    const [sidebarOpen, setSidebarOpen] = useState(false)
     const pathname = usePathname()
 
-    const toggleSidebar = () => setSidebarOpen(!sidebarOpen)
 
     return (
         <div className="drawer-side">

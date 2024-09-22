@@ -2,7 +2,6 @@
 'use client';
 import { useState } from 'react';
 import Image from 'next/image'
-import {useRouter} from "next/navigation";
 import pb from '~/lib/pocketbase';
 
 
@@ -10,7 +9,7 @@ export default function Page() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const router = useRouter();
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {

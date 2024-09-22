@@ -6,19 +6,7 @@ import pb from "~/lib/pocketbase";
 const TeamsPage: React.FC = () => {
     const [teams, setTeams] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    interface Player {
-        id: string;
-        number: number;
-        firstName: string;
-        lastName: string;
-        image: string;
-        status: 'Active' | 'Injured';
-        stats: {
-            points: number;
-            assists: number;
-            rebounds: number;
-        };
-    }
+
 
 
 

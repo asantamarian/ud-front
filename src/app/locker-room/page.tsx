@@ -15,7 +15,7 @@ export default function Home() {
                   className="mx-auto mb-4"
               />
               <h1 className="text-5xl font-bold text-primary">Unión Dragones</h1>
-              <p className="py-6 text-xl">Welcome to our team's locker room!</p>
+              <p className="py-6 text-xl">Te damos la bienvenida!</p>
             </div>
           </div>
         </div>
@@ -24,10 +24,10 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Link href="/locker-room/teams" className="card bg-primary text-primary-content">
               <div className="card-body items-center text-center">
-                <h2 className="card-title text-3xl">Teams</h2>
-                <p>View our team rosters and information</p>
+                <h2 className="card-title text-3xl">Equipos</h2>
+                <p>Nuestros equipos</p>
                 <div className="card-actions justify-end">
-                  <button className="btn btn-secondary">Enter</button>
+                  <button className="btn btn-secondary">Ver</button>
                 </div>
               </div>
             </Link>
@@ -35,9 +35,9 @@ export default function Home() {
             <Link href="/locker-room/playbook" className="card bg-secondary text-secondary-content">
               <div className="card-body items-center text-center">
                 <h2 className="card-title text-3xl">Playbook</h2>
-                <p>Access our strategies and plays</p>
+                <p>Jugadas y estrategia</p>
                 <div className="card-actions justify-end">
-                  <button className="btn btn-primary">Enter</button>
+                  <button className="btn btn-primary">Ver</button>
                 </div>
               </div>
             </Link>
