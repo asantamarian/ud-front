@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import InfoCard from '~/components/teams/infocard';
 import pb from '~/lib/pocketbase'; // PocketBase instance
-
+import moment from 'moment';
 interface PlayerData {
     id: string;
     number: number;
@@ -48,6 +48,28 @@ export default function PlayerProfile({ params }: { params: { id: string } }) {
     const [playerData, setPlayerData] = useState<PlayerData | null>(null);
     const [loading, setLoading] = useState(true);
 
+
+    function formatPhoneNumber(phoneNumber: string | number): string {
+        // Convert phoneNumber to a string in case it's passed as a number
+        const phoneStr = String(phoneNumber);
+
+        // Ensure the phone number is treated as a string and remove any non-numeric characters
+        const cleaned = phoneStr.replace(/\D/g, '');
+
+        // Ensure the phone number has 11 digits (e.g., '56962296578' with '56' as country code)
+        if (cleaned.length !== 11 || !cleaned.startsWith('56')) {
+            return 'Invalid phone number';
+        }
+
+        // Extract the necessary parts
+        const country = '+56';
+        const areaCode = cleaned.substring(2, 3); // '9'
+        const part1 = cleaned.substring(3, 7);    // First 4 digits after area code
+        const part2 = cleaned.substring(7);       // Last 4 digits
+
+        return `${country} ${areaCode} ${part1} ${part2}`;
+    }
+
     useEffect(() => {
         async function fetchPlayerData(id: string) {
             try {
@@ -79,7 +101,7 @@ export default function PlayerProfile({ params }: { params: { id: string } }) {
                         position: response.position || 'Unknown',
                     },
                     contactInfo: {
-                        phone: response.phone_number ? `${response.phone_number}` : 'Unknown',
+                        phone: response.phone_number ? `${formatPhoneNumber(response.phone_number)}` : 'Unknown',
                         email: response.email || 'Unknown',
                         address: response.address || 'Unknown',
                     },
@@ -91,7 +113,7 @@ export default function PlayerProfile({ params }: { params: { id: string } }) {
                     emergencyContact: {
                         name: response.emergency_name || 'Unknown',
                         relationship: response.emergency_relation || 'Unknown',
-                        phone: response.emergency_number ? `${response.emergency_number}` : 'Unknown',
+                        phone: response.emergency_number ? `${formatPhoneNumber(response.emergency_number)}` : 'Unknown',
                     },
                 };
 
@@ -165,7 +187,7 @@ export default function PlayerProfile({ params }: { params: { id: string } }) {
                 <InfoCard
                     title="📝 Datos personales"
                     content={[
-                        `Nacimiento: ${playerData.personalData.birthDate}`,
+                        `Nacimiento: ${moment(playerData.personalData.birthDate).format('DD/MM/YYYY')}`,
                         `Edad: ${playerData.personalData.age}`,
                         `Estatura: ${playerData.personalData.height}`,
                         `Peso: ${playerData.personalData.weight}`,
