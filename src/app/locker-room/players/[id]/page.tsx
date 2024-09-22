@@ -1,6 +1,9 @@
-import { notFound } from 'next/navigation';
+'use client';
+
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import InfoCard from '~/components/teams/infocard'; // Import the InfoCard component
+import InfoCard from '~/components/teams/infocard';
+import pb from '~/lib/pocketbase'; // PocketBase instance
 
 interface PlayerData {
     id: string;
@@ -41,64 +44,75 @@ interface PlayerData {
     };
 }
 
-// Mock function to simulate fetching player data
-async function getPlayerData(id: string) {
-    const playerData: PlayerData = {
-        id,
-        number: Number(id),
-        firstName: 'John',
-        lastName: 'Doe',
-        image: `https://picsum.photos/seed/player${id}/150/150`,
-        coverImage: `https://picsum.photos/seed/cover${id}/800/300`,
-        status: 'Active',
-        stats: {
-            points: 25,
-            assists: 7,
-            rebounds: 12,
-        },
-        bio: 'A passionate basketball player with a love for the game.',
-        highlights: [
-            `https://picsum.photos/seed/highlight${id}-1/300/300`,
-            `https://picsum.photos/seed/highlight${id}-2/300/300`,
-            `https://picsum.photos/seed/highlight${id}-3/300/300`,
-            `https://picsum.photos/seed/highlight${id}-4/300/300`,
-        ],
-        personalData: {
-            age: 28,
-            birthDate:"1993-01-01",
-            height: '6\'4" (193 cm)',
-            weight: '220 lbs (100 kg)',
-            position: 'Guard',
-        },
-        contactInfo: {
-            phone: '+1 234 567 890',
-            email: 'john.doe@example.com',
-            address: '1234 Main St, Anytown, USA',
-        },
-        healthData: {
-            bloodType: 'O+',
-            allergies: ['Peanuts', 'Shellfish'],
-            medicalConditions: ['Asthma'],
-        },
-        emergencyContact: {
-            name: 'Jane Doe',
-            relationship: 'Wife',
-            phone: '+1 987 654 321',
-        },
-    };
+export default function PlayerProfile({ params }: { params: { id: string } }) {
+    const [playerData, setPlayerData] = useState<PlayerData | null>(null);
+    const [loading, setLoading] = useState(true);
 
-    if (!playerData) {
-        return null;
+    useEffect(() => {
+        async function fetchPlayerData(id: string) {
+            try {
+                const response = await pb.collection('players').getOne(id, { requestKey: null });
+
+                const playerData: PlayerData = {
+                    id: response.id,
+                    number: response.number || 0,
+                    firstName: response.name || 'Unknown',
+                    lastName: response.lastName || 'Unknown',
+                    image:response.profile_pic ? `${pb.baseUrl}/api/files/${response.collectionId}/${response.id}/${response.profile_pic}` : `https://picsum.photos/seed/player${id}/150/150`, // Adjust image path
+                    coverImage: `https://picsum.photos/seed/cover${id}/800/300`, // Adjust as necessary
+                    status: response.injured ? 'Injured' : 'Active',
+                    stats: {
+                        points: response.tot_points || 0,
+                        assists: response.tot_assists || 0,
+                        rebounds: response.tot_rebounds || 0,
+                    },
+                    bio: response.bio || '',
+                    highlights: [
+                        `https://picsum.photos/seed/highlight${id}-1/300/300`,
+                        `https://picsum.photos/seed/highlight${id}-2/300/300`,
+                    ],
+                    personalData: {
+                        age: response.birthDate ? calculateAge(response.birthDate) : 0,
+                        birthDate: response.birthDate || '',
+                        height: response.height ? `${response.height} cm` : 'Unknown',
+                        weight: response.weight ? `${response.weight} kg` : 'Unknown',
+                        position: response.position || 'Unknown',
+                    },
+                    contactInfo: {
+                        phone: response.phone_number ? `${response.phone_number}` : 'Unknown',
+                        email: response.email || 'Unknown',
+                        address: response.address || 'Unknown',
+                    },
+                    healthData: {
+                        bloodType: 'Unknown',
+                        allergies: response.allergies ? response.allergies.split(',') : [],
+                        medicalConditions: response.conditions ? response.conditions.split(',') : [],
+                    },
+                    emergencyContact: {
+                        name: response.emergency_name || 'Unknown',
+                        relationship: response.emergency_relation || 'Unknown',
+                        phone: response.emergency_number ? `${response.emergency_number}` : 'Unknown',
+                    },
+                };
+
+                setPlayerData(playerData);
+            } catch (error) {
+                console.error('Error fetching player data:', error);
+                setPlayerData(null);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        void fetchPlayerData(params.id);
+    }, [params.id]);
+
+    if (loading) {
+        return <div>Loading...</div>;
     }
 
-    return playerData;
-}
-
-export default async function PlayerProfile({ params }: { params: { id: string } }) {
-    const playerData = await getPlayerData(params.id);
-
     if (!playerData) {
-        notFound();
+        return <div>Player not found</div>;
     }
 
     return (
@@ -118,8 +132,8 @@ export default async function PlayerProfile({ params }: { params: { id: string }
                         <Image
                             src={playerData.image}
                             alt={`${playerData.firstName} ${playerData.lastName}`}
-                            width={128}
-                            height={128}
+                            width={150}
+                            height={250}
                             className="rounded-full"
                         />
                     </div>
@@ -141,8 +155,8 @@ export default async function PlayerProfile({ params }: { params: { id: string }
                             playerData.status === 'Active' ? 'badge-success' : 'badge-error'
                         }`}
                     >
-            {playerData.status}
-          </span>
+                        {playerData.status}
+                    </span>
                 </div>
             </div>
 
@@ -193,7 +207,6 @@ export default async function PlayerProfile({ params }: { params: { id: string }
                             <Image
                                 src={highlight}
                                 alt={`Highlight ${index + 1}`}
-                                layout="responsive"
                                 width={300}
                                 height={300}
                                 className="object-cover rounded"
@@ -204,4 +217,18 @@ export default async function PlayerProfile({ params }: { params: { id: string }
             </div>
         </div>
     );
+}
+
+// Helper function to calculate age from birthdate
+function calculateAge(birthDate: string): number {
+    const birth = new Date(birthDate);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDifference = today.getMonth() - birth.getMonth();
+
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birth.getDate())) {
+        age--;
+    }
+
+    return age;
 }

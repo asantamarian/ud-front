@@ -7,6 +7,7 @@ const TeamsPage: React.FC = () => {
     const [teams, setTeams] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     interface Player {
+        id: string;
         number: number;
         firstName: string;
         lastName: string;
@@ -19,13 +20,7 @@ const TeamsPage: React.FC = () => {
         };
     }
 
-    interface TeamCardProps {
-        teamName: string;
-        teamLogo: string;
-        activePlayers: number;
-        injuredPlayers: number;
-        players: Player[];
-    }
+
 
     useEffect(() => {
         const fetchTeams = async () => {
@@ -41,6 +36,7 @@ console.log(response);
                         injured: team.expand.players.filter((player: any) => player.injured).length,
                         active: team.expand.players.filter((player: any) => !player.injured).length,
                         players: team.expand.players.map((player: any) => ({
+                            id: player.id,
                             number: player.number,
                             firstName: player.name,
                             lastName: player.lastName,
@@ -67,7 +63,7 @@ console.log(response);
 
     return (
         <div>
-            <h1 className="text-3xl font-bold mb-6">Equipos</h1>
+            <h1 className="text-3xl font-bold mb-6">Teams</h1>
             <div className="grid grid-cols-1  md:grid-cols-3 gap-6">
                 {teams.map((team) => (
                     <TeamCard

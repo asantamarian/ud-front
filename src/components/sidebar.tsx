@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation'
 import { Menu, LayoutDashboard, Users, BookOpen, LogOut } from 'lucide-react'
 
 const sidebarItems = [
-    { href: "/locker-room", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/locker-room", label: "Home", icon: LayoutDashboard },
     { href: "/locker-room/teams", label: "Teams", icon: Users },
     { href: "/locker-room/playbook", label: "Playbook", icon: BookOpen }
 ]

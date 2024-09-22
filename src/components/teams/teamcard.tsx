@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 interface Player {
+    id: string;
     number: number;
     firstName: string;
     lastName: string;
@@ -56,7 +57,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
                 <ul className="overflow-y-auto h-1/2">
                     {players.map((player, index) => (
                         <li key={index} className="flex items-center mb-2">
-                            <Link href={`/locker-room/players/${player.number}`} className="flex items-center">
+                            <Link href={`/locker-room/players/${player.id}`} className="flex items-center">
                                 <div className="avatar">
                                     <div className="w-10 rounded-full">
                                         <Image
