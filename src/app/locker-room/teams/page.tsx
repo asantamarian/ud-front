@@ -68,7 +68,7 @@ console.log(response);
     return (
         <div>
             <h1 className="text-3xl font-bold mb-6">Equipos</h1>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1  md:grid-cols-3 gap-6">
                 {teams.map((team) => (
                     <TeamCard
                         key={team.name}

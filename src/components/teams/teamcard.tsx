@@ -28,7 +28,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
                                                players,
                                            }) => {
     return (
-        <div className="card bg-base-100 shadow-xl h-128 overflow-hidden">
+        <div className="card bg-base-100 shadow-xl h-3/4 overflow-hidden">
             <div className="card-body p-4">
                 <h2 className="card-title text-lg">{teamName}</h2>
                 <div className="stats shadow mb-2">
@@ -53,7 +53,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
                         height={150}
                     />
                 </div>
-                <ul className="overflow-y-auto h-80">
+                <ul className="overflow-y-auto h-1/2">
                     {players.map((player, index) => (
                         <li key={index} className="flex items-center mb-2">
                             <Link href={`/locker-room/players/${player.number}`} className="flex items-center">
